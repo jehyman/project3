@@ -69,6 +69,36 @@ var Engine = (function(global) {
         main();
     }
 
+    // ---- My Additions ---------------------------
+    // A collision occurs if the player and a bug are in the same row, AND part of the bug is "in the same column as the player".
+    // Since the sprites don't fill the entire column, I have add a "collisionTolerance" so that the collision doesn't occur until
+    // the bug is "slightly" into the column.
+    // If there is a collision, get ready for a new game.
+    function checkCollisions() {
+        var row = player.row, col = player.col;
+
+        allEnemies.some(function (enemy) { //  "some" instead ""forEach" - stop on FIRST collision detection
+            if (row === enemy.row) {
+                if (enemy.x > (col - 1) * GameValues.colWidth + GameValues.collisionTolerance && enemy.x < (col + 1) * GameValues.colWidth - GameValues.collisionTolerance) { // collision!
+                    player.won = false;
+                    reset();
+                    return true;
+                }
+            }
+        });
+    }
+
+    // check for win, if yes, get ready to start over
+    function checkWin() {
+        if (player.row === 0 && player.col === player.loverCol) { // are both lovers in the same cell?
+            player.won = true;
+            reset();
+            return true;
+        }
+        return false;
+    }
+    //-------------------------------------------------------------------------
+
     /* This function is called by main (our game loop) and itself calls all
      * of the functions which may need to update entity's data. Based on how
      * you implement your collision detection (when two entities occupy the
@@ -80,7 +110,9 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        if (!checkWin()) {      // My Addition
+            checkCollisions();
+        }
     }
 
     /* This is called by the update function  and loops through all of the
@@ -135,8 +167,6 @@ var Engine = (function(global) {
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
         }
-
-
         renderEntities();
     }
 
@@ -148,11 +178,15 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        allEnemies.forEach(function(enemy) {
+        allEnemies.forEach(function (enemy) {
+            //enemy.update(dt);
             enemy.render();
         });
 
+        // render  activeLover, the "player"
         player.render();
+        // render passiveLover
+        player.renderPassiveLover(); // ---- My Addition -----
     }
 
     /* This function does nothing but it could have been a good place to
@@ -160,7 +194,9 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
+        // ---- My Additions -----
+        stopAndResetAllEntities();
+        drawAppropriateModal();
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -172,7 +208,12 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/enemy-bug-reverse.png',
+        'images/char-boy.png',
+        'images/char-princess-girl.png',
+        'images/princess-grey.png',
+        'images/boy-grey.png',
+        'images/heart.png'
     ]);
     Resources.onReady(init);
 
@@ -181,4 +222,5 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
+
 })(this);

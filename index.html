@@ -1,10 +1,144 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Effective JavaScript: Frogger</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Effective JavaScript: Frogger</title>
+  <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+  <script src="js/jQuery.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
+  <!--Game Start Modal-->
+  <div id="StartModal" class="modal fade" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div  class="modal-header header-color">
+          <h3 class="modal-title">Game Start</h3>
+        </div>
+        <div class="modal-body">
+          <div role="tabpanel">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+              <li role="presentation" class="active"><a href="#descipt" aria-controls="descipt" role="tab" data-toggle="tab">Description and Rules</a></li>
+              <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div role="tabpanel" class="tab-pane active" id="descipt">
+                <br>
+                <h4>Rules for the game:</h4>
+                <p class="descript">The objective of the game is to unite the two lovers. The active lover starts on the safety of the grass field.  The active lover can be moved, one cell at a time, by using the arrow keys: “left”, “right”, “up”, and “down”.  The passive lover waits, without moving, in the safety of the river.  In my interpretation of the game, water is "safe" for both lovers.  After all, the game is called “Frogger”, and frogs love water.  The active lover must traverse three dangerous roads filled with enemy bugs who will destroy the lover on contact and end the game.  To win, the active lover must arrive in the same cell as the passive lover.  You can play as many new games as you like.  So that the game will not be sexist, you can choose, in the "setting" tab, either the male, the "boy", or the female, the "princess", to be the active lover.  Have fun, and be careful on the roads!</p>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="settings">
+                <h5>Click to select the active lover - the one who traverses the enemy filled roads</h5>
+                <img class="princess" src="images/char-princess-girl.png" alt="princess">
+                <img class="boy" src="images/char-boy.png" alt="boy">
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="StartGame" type="button" class="btn btn-primary btn-lg btn-block">Start Game</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--==================================================================================================-->
+  <!--Just won game modal-->
+  <div id="WonModal" class="modal fade" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div  class="modal-header header-color">
+          <h3 class="modal-title">Congratulations! You united the lovers!</h3>
+        </div>
+        <div class="modal-body">
+          <div role="tabpanel">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+              <li role="presentation"><a href="#descriptWon" aria-controls="descriptWon" role="tab" data-toggle="tab">Description and Rules</a></li>
+              <li role="presentation"><a href="#settingsWon" aria-controls="settingsWon" role="tab" data-toggle="tab">Settings</a></li>
+              <li role="presentation" ><a href="#resultWon" aria-controls="resultWon" role="tab" data-toggle="tab">Result</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div role="tabpanel" class="tab-pane" id="descriptWon">
+                <br>
+                <h4>Rules for the game:</h4>
+                <p class="descript">The objective of the game is to unite the two lovers. The active lover starts on the safety of the grass field.  The active lover can be moved, one cell at a time, by using the arrow keys: “left”, “right”, “up”, and “down”.  The passive lover waits, without moving, in the safety of the river.  In my interpretation of the game, water is "safe" for both lovers.  After all, the game is called “Frogger”, and frogs love water.  The active lover must traverse three dangerous roads filled with enemy bugs who will destroy the lover on contact and end the game.  To win, the active lover must arrive in the same cell as the passive lover.  You can play as many new games as you like.  So that the game will not be sexist, you can choose, in the "setting" tab, either the male, the "boy", or the female, the "princess", to be the active lover.  Have fun, and be careful on the roads!</p>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="settingsWon">
+                <h5>Click to select the active lover - the one who traverses the enemy filled roads</h5>
+                <img class="princess" src="images/char-princess-girl.png" alt="princess">
+                <img class="boy" src="images/char-boy.png" alt="boy">
+              </div>
+              <div role="tabpanel" class="tab-pane" id="resultWon">
+                  <p class="score"></p>
+                <img src="images/char-princess-girl.png" alt="princess">
+                <img src="images/char-boy.png" alt="boy">
+                <img src="images/Heart.png" alt="heart">
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="StartGameWin" type="button" class="btn btn-primary btn-lg btn-block">Play again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Just lost game modal-->
+  <div id="LostModal" class="modal  fade" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header header-grey">
+          <h3 class="modal-title">You were intercepted on your quest.  Try again!</h3>
+        </div>
+        <div class="modal-body">
+          <div role="tabpanel">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+              <li role="presentation"><a href="#descriptLost" aria-controls="descriptLost" role="tab" data-toggle="tab">Description and Rules</a></li>
+              <li role="presentation"><a href="#settingsLost" aria-controls="settingsLost" role="tab" data-toggle="tab">Settings</a></li>
+              <li role="presentation"><a href="#resultLost" aria-controls="resultLost" role="tab" data-toggle="tab">Result</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div role="tabpanel" class="tab-pane" id="descriptLost">
+                <br>
+                <h4>Rules for the game:</h4>
+                <p class="descript">The objective of the game is to unite the two lovers. The active lover starts on the safety of the grass field.  The active lover can be moved, one cell at a time, by using the arrow keys: “left”, “right”, “up”, and “down”.  The passive lover waits, without moving, in the safety of the river.  In my interpretation of the game, water is "safe" for both lovers.  After all, the game is called “Frogger”, and frogs love water.  The active lover must traverse three dangerous roads filled with enemy bugs who will destroy the lover on contact and end the game.  To win, the active lover must arrive in the same cell as the passive lover.  You can play as many new games as you like.  So that the game will not be sexist, you can choose, in the "setting" tab, either the male, the "boy", or the female, the "princess", to be the active lover.  Have fun, and be careful on the roads!</p>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="settingsLost">
+                <h5>Click to select the active lover - the one who traverses the enemy filled roads</h5>
+                <img class="princess" src="images/char-princess-girl.png" alt="princess">
+                <img class="boy" src="images/char-boy.png" alt="boy">
+              </div>
+              <div role="tabpanel" class="tab-pane" id="resultLost">
+                <h4>You can do it. Unite these forlorn lovers!</h4>
+                <p class="score"></p>
+                <img src="images/princess-grey.png" alt="sad princess">
+                <img src="images/boy-grey.png" alt="sad boy">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="StartGameLost" type="button" class="btn btn-primary btn-lg btn-block">Try again!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
